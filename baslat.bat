@@ -9,6 +9,15 @@ echo Arayuz tarayicinizda otomatik olarak acilacaktir...
 echo.
 
 :: RTMP Sunucusunu baslat
+echo RTMP Sunucusu kontrol ediliyor...
+if not exist "mediamtx\mediamtx.exe" (
+    echo MediaMTX (RTMP Sunucusu) bulunamadi. Otomatik olarak indiriliyor... Lutfen bekleyin...
+    powershell -Command "Invoke-WebRequest -Uri 'https://github.com/bluenviron/mediamtx/releases/download/v1.9.3/mediamtx_v1.9.3_windows_amd64.zip' -OutFile 'mediamtx.zip'"
+    powershell -Command "Expand-Archive -Path 'mediamtx.zip' -DestinationPath 'mediamtx' -Force"
+    del mediamtx.zip
+    echo Indirme basarili!
+)
+
 echo RTMP Sunucusu baslatiliyor...
 cd mediamtx
 start "MediaMTX Server" cmd /c "mediamtx.exe"
