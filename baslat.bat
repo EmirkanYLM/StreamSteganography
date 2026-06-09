@@ -8,7 +8,7 @@ echo Lutfen acilan siyah pencereleri kapatmayin!
 echo Arayuz tarayicinizda otomatik olarak acilacaktir...
 echo.
 
-:: Python Kutuphanelerini (Requirements) Otomatik Yukle
+
 echo Python kutuphaneleri kontrol ediliyor / yukleniyor... Lutfen bekleyin...
 pip install -r requirements.txt >nul 2>&1
 if %errorlevel% neq 0 (
@@ -18,7 +18,7 @@ if %errorlevel% neq 0 (
 )
 echo.
 
-:: RTMP Sunucusunu baslat
+
 echo RTMP Sunucusu kontrol ediliyor...
 if not exist "mediamtx\mediamtx.exe" (
     echo MediaMTX RTMP Sunucusu bulunamadi. Otomatik olarak indiriliyor... Lutfen bekleyin...
@@ -33,14 +33,14 @@ cd mediamtx
 start "MediaMTX Server" cmd /c "mediamtx.exe"
 cd ..
 
-:: Python sunucusunu (Flask) baslat
+
 echo Web Sunucusu baslatiliyor...
 start "StegoCast Server" cmd /c "python app.py & pause"
 
-:: Sunucularin hazir olmasi icin 3 saniye bekle
+
 ping 127.0.0.1 -n 4 > nul
 
-:: Varsayilan web tarayicisinda arayuzu ac
+
 start "" "http://localhost:5000"
 
 exit

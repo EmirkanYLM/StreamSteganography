@@ -3,9 +3,7 @@ import time
 from stego_utils import extract_data_fast
 
 def main():
-    # Decoder, veriyi gizlediğimiz encoder'ın oluşturduğu Sanal Kamerayı veya
-    # OBS'ten doğrudan gelen yayını okuyacak.
-    # Kamera numaranızı buradan ayarlayın (genellikle 2, 3 veya 4 olabilir yeni eklenen kameralara göre).
+    
     camera_id = 2
     cap = cv2.VideoCapture(camera_id)
     
@@ -26,10 +24,10 @@ def main():
                 time.sleep(1)
                 continue
             
-            # Görüntüyü ekranda göster
+            
             cv2.imshow('Decoder View', frame)
             
-            # Karedeki gizli veriyi oku
+            
             start_time = time.time()
             hidden_message = extract_data_fast(frame)
             end_time = time.time()
@@ -37,9 +35,9 @@ def main():
             if hidden_message:
                 print(f"[Veri Bulundu - Çözme Süresi: {(end_time - start_time)*1000:.1f}ms] Mesaj: {hidden_message}")
             else:
-                pass # Ekranda spam olmaması için boşken yazdırmıyoruz
+                pass 
                 
-            # 'q' tuşuna basıldığında çık
+           
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
                 

@@ -6,12 +6,12 @@ import numpy as np
 from flask import Flask, render_template, Response, request, jsonify
 from stego_utils import hide_data_fast, extract_data_fast
 
-# RTMP gecikmelerini (lag) önlemek için OpenCV FFmpeg ayarları (Zero-Latency Flag)
+
 os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "fflags;nobuffer|analyzeduration;0|probesize;32"
 
 app = Flask(__name__)
 
-# Global değişkenler
+
 current_secret_message = "Merhaba! Bu mesaj varsayilan olarak gizlenmistir."
 last_decoded_message = "Henüz veri okunamadı..."
 current_camera_id = 1
@@ -28,7 +28,7 @@ class CameraThread(threading.Thread):
         self.cap = cv2.VideoCapture(self.src)
         self.latest_frame = None
         self.running = True
-        self.daemon = True # Ana program kapanınca bu thread de kapansın
+        self.daemon = True 
 
     def run(self):
         while self.running:
@@ -67,15 +67,14 @@ def generate_frames():
     start_camera(current_camera_id)
         
     while True:
-        # Eğer arayüzden kamera değiştirme isteği gelirse
+        
         if change_camera_flag:
             start_camera(current_camera_id)
             change_camera_flag = False
             
         frame = cam_thread.get_frame()
         if frame is None:
-            # Bağlantı koptuğunda veya kamera gelmediğinde web sitesinin çökmemesi için
-            # "Sinyal Yok" ekranı oluşturup tarayıcıya yolluyoruz.
+            
             no_signal_frame = np.zeros((480, 640, 3), dtype=np.uint8)
             cv2.putText(no_signal_frame, "KAMERA / YAYIN BULUNAMADI", (50, 240), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
             cv2.putText(no_signal_frame, "Lutfen Arayuzden Dogru Kaynagi Secin", (50, 280), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 1)
@@ -85,24 +84,24 @@ def generate_frames():
             time.sleep(0.5)
             continue
             
-        # Görüntüye güncel gizli mesajı DWT-QIM ile gömüyoruz
+        
         msg_with_time = f"{current_secret_message} [{time.strftime('%H:%M:%S')}]"
         
-        # Bu işlem artık stego_utils içindeki ROI (Region of Interest) sayesinde x16 kat daha hızlı
+        
         encoded_frame = hide_data_fast(frame, msg_with_time)
         
-        # Test amaçlı: Gizlenen veriyi anında geri okuyup arayüze göstermek için kaydediyoruz
+        
         last_decoded_message = extract_data_fast(encoded_frame)
         
-        # Web tarayıcısında göstermek için çerçeveyi JPEG olarak encode et
+        
         ret, buffer = cv2.imencode('.jpg', encoded_frame)
         frame_bytes = buffer.tobytes()
         
-        # MJPEG formatında çerçeveyi yield et
+        
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
                
-        # Tarayıcıya FPS sabitlemesi (30 FPS hedefi: ~33ms)
+        
         time.sleep(0.03)
 
 @app.route('/')
