@@ -8,6 +8,16 @@ echo Lutfen acilan siyah pencereleri kapatmayin!
 echo Arayuz tarayicinizda otomatik olarak acilacaktir...
 echo.
 
+:: Python Kutuphanelerini (Requirements) Otomatik Yukle
+echo Python kutuphaneleri kontrol ediliyor / yukleniyor... Lutfen bekleyin...
+pip install -r requirements.txt >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [UYARI] pip install komutu calismadi. Lutfen Python'in yuklu oldugundan emin olun.
+) else (
+    echo Kutuphaneler hazir!
+)
+echo.
+
 :: RTMP Sunucusunu baslat
 echo RTMP Sunucusu kontrol ediliyor...
 if not exist "mediamtx\mediamtx.exe" (
