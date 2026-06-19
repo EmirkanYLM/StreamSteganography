@@ -12,10 +12,7 @@ WAVELET = 'haar'
 ROI_SIZE = 512  
 
 def hide_data_fast(image, secret_data_str):
-    """
-    DWT (Ayrık Dalgacık Dönüşümü) ve QIM kullanarak görüntüye veri gizler.
-    Bu yöntem kayıplı (lossy) sıkıştırmalara (H.264 vb.) karşı dayanıklıdır.
-    """
+
     if not secret_data_str:
         return image
         
